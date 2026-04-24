@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>郑傲 | Portfolio</title>
+
+<style>
+body {
+  margin:0;
+  font-family:Arial;
+  background:#0a0a0a;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ===== 视差封面 ===== */
+.hero {
+  height:100vh;
+  background:url('images/work1.jpg') center/cover fixed;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.hero h1 {
+  font-size:60px;
+  letter-spacing:5px;
+}
+
+.hero p {
+  color:#aaa;
+}
+
+/* ===== 视频模块 ===== */
+.video-section{
+  padding:80px 10%;
+  text-align:center;
+}
+
+.video-title{
+  font-size:30px;
+  margin-bottom:20px;
+  border-left:4px solid #00d4ff;
+  padding-left:10px;
+  text-align:left;
+}
+
+.video-box video{
+  width:100%;
+  max-height:650px;
+  border-radius:12px;
+  background:black;
+}
+
+/* ===== 滚动渐入 ===== */
+.fade {
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s;
+}
+
+.fade.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== 作品卡片 ===== */
+.works {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+  padding:80px;
+}
+
+.card {
+  position:relative;
+  overflow:hidden;
+  border-radius:15px;
+  cursor:pointer;
+}
+
+.card img {
+  width:100%;
+  height:300px;
+  object-fit:cover;
+  transition:0.5s;
+}
+
+.card:hover img {
+  transform:scale(1.15);
+  filter:brightness(0.7);
+}
+
+.card::after {
+  content:"点击查看";
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  opacity:0;
+  transition:0.5s;
+}
+
+.card:hover::after {
+  opacity:1;
+}
+
+/* ===== 高级 Lightbox ===== */
+#lightbox {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.92);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  opacity:0;
+  pointer-events:none;
+  transition:0.4s;
+}
+
+#lightbox.show {
+  opacity:1;
+  pointer-events:auto;
+}
+
+#lightbox img {
+  max-width:90%;
+  max-height:90%;
+  transform:scale(0.8);
+  transition:0.4s;
+  border-radius:12px;
+}
+
+#lightbox.show img {
+  transform:scale(1);
+}
+
+.close-btn {
+  position:absolute;
+  top:30px;
+  right:40px;
+  font-size:30px;
+  cursor:pointer;
+  color:white;
+}
+
+.nav {
+  position:absolute;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:0 40px;
+  font-size:40px;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* ===== 分区 ===== */
+.section {
+  padding:100px 10%;
+}
+
+.title {
+  font-size:30px;
+  margin-bottom:40px;
+  border-left:4px solid #00d4ff;
+  padding-left:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 封面 -->
+<div class="hero">
+  <h1>郑傲</h1>
+  <p>3D Environment Artist</p>
+</div>
+
+<!-- 视频 -->
+<div class="video-section fade">
+  <div class="video-title">PROJECT DEMO VIDEO</div>
+  <div class="video-box">
+    <video controls>
+      <source src="images/废土.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<!-- 作品 -->
+<div class="section fade">
+  <div class="title">PROJECTS</div>
+
+  <div class="works">
+    <div class="card"><img src="images/CuteRoom.png"></div>
+    <div class="card"><img src="images/神秘工厂CUBE.png"></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <div class="close-btn" onclick="closeLightbox()">×</div>
+  <div class="nav">
+    <div onclick="prevImg()">‹</div>
+    <div onclick="nextImg()">›</div>
+  </div>
+  <img id="lightbox-img">
+</div>
+
+<script>
+// 滚动动画
+const fades = document.querySelectorAll('.fade');
+window.addEventListener('scroll', () => {
+  fades.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){
+      el.classList.add('show');
+    }
+  });
+});
+
+// 图片逻辑
+const images = Array.from(document.querySelectorAll('.card img'));
+let currentIndex = 0;
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+
+images.forEach((img, index) => {
+  img.addEventListener('click', () => {
+    currentIndex = index;
+    openLightbox();
+  });
+});
+
+function openLightbox(){
+  lightbox.classList.add('show');
+  lightboxImg.src = images[currentIndex].src;
+}
+
+function closeLightbox(){
+  lightbox.classList.remove('show');
+}
+
+function nextImg(){
+  currentIndex = (currentIndex + 1) % images.length;
+  lightboxImg.src = images[currentIndex].src;
+}
+
+function prevImg(){
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  lightboxImg.src = images[currentIndex].src;
+}
+
+lightbox.addEventListener('click', (e) => {
+  if(e.target === lightbox){
+    closeLightbox();
+  }
+});
+
+// 触摸滑动
+let startX = 0;
+lightbox.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+lightbox.addEventListener('touchend', e => {
+  let endX = e.changedTouches[0].clientX;
+  if(startX - endX > 50) nextImg();
+  if(endX - startX > 50) prevImg();
+});
+</script>
+
+</body>
+</html>
