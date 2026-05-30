@@ -1216,6 +1216,29 @@
             fill: none;
             stroke-width: 1.5;
         }
+        .contact-photo {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
+        }
+        .profile-photo:hover {
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+        .photo-caption {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
 
         footer {
             padding: 48px 10%;
@@ -1280,6 +1303,7 @@
             .about-grid { grid-template-columns: 1fr; gap: 40px; }
             .projects-grid { grid-template-columns: 1fr; }
             .contact-grid { grid-template-columns: 1fr; }
+            .profile-photo { width: 150px; height: 150px; }
             .counter-grid { grid-template-columns: 1fr 1fr; }
             .detail-content { padding: 80px 20px 60px; }
             .detail-meta { grid-template-columns: 1fr 1fr; }
@@ -1429,22 +1453,26 @@
             <div class="section-line"></div>
         </div>
         <div class="reveal">
-            <p style="color:var(--text-muted); font-size:14px; line-height:2;">期待与你交流，无论是项目合作还是技术探讨。</p>
+            <p style="color:var(--text-muted); font-size:14px; line-height:2;">期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）</p>
             <div class="contact-grid">
-                <a href="mailto:1917643166@qq.com" class="contact-card" aria-label="发送邮件至 1917643166@qq.com">
+                <a href="mailto:1917643166@qq.com" class="contact-card" id="emailCard" aria-label="发送邮件至 1917643166@qq.com" oncontextmenu="copyToClipboard('1917643166@qq.com', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
                     </div>
                     <div class="contact-card-label">Email</div>
                     <div class="contact-card-value">1917643166@qq.com</div>
                 </a>
-                <div class="contact-card" style="cursor:default;" role="img" aria-label="微信号 AtlasStbz">
+                <div class="contact-card" id="wechatCard" style="cursor:default;" role="img" aria-label="微信号 AtlasStbz" oncontextmenu="copyToClipboard('AtlasStbz', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                     </div>
                     <div class="contact-card-label">WeChat</div>
                     <div class="contact-card-value">AtlasStbz</div>
                 </div>
+            </div>
+            <div class="contact-photo reveal">
+                <img src="images/帅哥.png" alt="郑傲个人照片" class="profile-photo">
+                <p class="photo-caption">这是我</p>
             </div>
         </div>
     </section>
@@ -1980,6 +2008,74 @@
                 link.style.transform = 'translate(0, 0)';
             });
         });
+
+        // 复制到剪贴板功能
+        function copyToClipboard(text, event) {
+            event.preventDefault();
+            navigator.clipboard.writeText(text).then(() => {
+                // 创建临时提示
+                const tooltip = document.createElement('div');
+                tooltip.textContent = '已复制: ' + text;
+                tooltip.style.cssText = `
+                    position: fixed;
+                    left: ${event.clientX}px;
+                    top: ${event.clientY - 30}px;
+                    background: rgba(0, 212, 255, 0.9);
+                    color: #060608;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-family: var(--font-body);
+                    letter-spacing: 1px;
+                    z-index: 10000;
+                    pointer-events: none;
+                    animation: fadeInOut 2s ease forwards;
+                `;
+                document.body.appendChild(tooltip);
+                setTimeout(() => tooltip.remove(), 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                // 降级方案
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                const tooltip = document.createElement('div');
+                tooltip.textContent = '已复制: ' + text;
+                tooltip.style.cssText = `
+                    position: fixed;
+                    left: ${event.clientX}px;
+                    top: ${event.clientY - 30}px;
+                    background: rgba(0, 212, 255, 0.9);
+                    color: #060608;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-family: var(--font-body);
+                    letter-spacing: 1px;
+                    z-index: 10000;
+                    pointer-events: none;
+                    animation: fadeInOut 2s ease forwards;
+                `;
+                document.body.appendChild(tooltip);
+                setTimeout(() => tooltip.remove(), 2000);
+            });
+        }
+
+        // 添加fadeInOut动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(10px); }
+                20% { opacity: 1; transform: translateY(0); }
+                80% { opacity: 1; transform: translateY(0); }
+                100% { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
 
         // 北京时间时钟
         function updateClock() {
