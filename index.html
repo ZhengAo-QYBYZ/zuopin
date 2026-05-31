@@ -1171,10 +1171,10 @@
 
         .contact-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 28px;
             margin-top: 48px;
-            max-width: 700px;
+            max-width: 900px;
         }
         .contact-card {
             padding: 32px;
@@ -1323,6 +1323,7 @@
             .counter-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -1376,8 +1377,20 @@
         <div class="marquee-track">
             <span class="marquee-item">3D ENVIRONMENT <span class="dot"></span> UNREAL ENGINE <span class="dot"></span> CONCEPT ART <span class="dot"></span> BLENDER <span class="dot"></span> PBR MATERIALS <span class="dot"></span> LIGHTING <span class="dot"></span> WORLD BUILDING <span class="dot"></span></span>
             <span class="marquee-item">3D ENVIRONMENT <span class="dot"></span> UNREAL ENGINE <span class="dot"></span> CONCEPT ART <span class="dot"></span> BLENDER <span class="dot"></span> PBR MATERIALS <span class="dot"></span> LIGHTING <span class="dot"></span> WORLD BUILDING <span class="dot"></span></span>
-        </div>
-    </div>
+                </div>
+                <div class="contact-card" id="emailFormCard">
+                    <div class="contact-card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <div class="contact-card-label">发送邮件</div>
+                    <form id="contactForm" style="margin-top: 10px;">
+                        <input type="email" name="user_email" placeholder="你的邮箱" required style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f0ece4; font-size: 12px;">
+                        <input type="text" name="subject" placeholder="主题" required style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f0ece4; font-size: 12px;">
+                        <textarea name="message" placeholder="消息内容" required style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #f0ece4; font-size: 12px; min-height: 80px; resize: vertical;"></textarea>
+                        <button type="submit" style="width: 100%; padding: 10px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 6px; color: #00d4ff; cursor: pointer; font-size: 12px; letter-spacing: 1px;">发送</button>
+                    </form>
+                </div>
+            </div>
 
     <section class="section" id="projects" aria-label="精选作品">
         <div class="section-header reveal">
@@ -2123,6 +2136,37 @@
         // 立即更新并每秒刷新
         updateClock();
         setInterval(updateClock, 1000);
+
+        // EmailJS 配置
+        (function() {
+            // 请替换为你自己的EmailJS配置
+            emailjs.init("EhaQ_NO-8EqCeSR0R"); // 替换为你的用户ID
+            
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = '发送中...';
+                    submitBtn.disabled = true;
+                    
+                    // 替换为你的服务ID和模板ID
+                    emailjs.sendForm('service_tqhetdc', 'template_fto6u5d', this)
+                        .then(function() {
+                            alert('邮件发送成功！');
+                            contactForm.reset();
+                        }, function(error) {
+                            alert('发送失败: ' + error.text);
+                        })
+                        .finally(function() {
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        });
+                });
+            }
+        })();
 
         // 键盘操作
         document.addEventListener('keydown', (e) => {
