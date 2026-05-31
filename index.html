@@ -1546,6 +1546,21 @@
                 gallery: ["images/feitu.png"]
             },
             {
+                title: "轮椅走廊",
+                category: "场景",
+                thumb: "images/RE9_1.png",
+                desc: "BlenderSP流程制作资产，使用UE5烘焙灯光，含实机演示，探索类RE9氛围。",
+                hasVideo: true,
+                videoUrl: "https://www.bilibili.com/video/BV1DuVL6bEcA/?spm_id_from=333.337.search-card.all.click&vd_source=d593d2a5fe15156ff54df2f13d22acec",
+                hasDoc: false,
+                documents: [],
+                meta: [
+                    { label: "工具", value: "UE BLENDER SP" },
+                    { label: "时间", value: "2026" }
+                ],
+                gallery: ["images/RE9_1.png", "images/RE9_2.png", "images/RE9_3.png"]
+            },
+            {
                 title: "长板",
                 category: "模型",
                 thumb: "images/长板2.png",
@@ -1784,7 +1799,7 @@
 
         // 渲染精选项目
         const featuredGrid = document.getElementById('projectsGrid');
-        [0, 1, 2].forEach(i => {
+        [0, 3, 2].forEach(i => {
             const card = createCard(projects[i], i);
             featuredGrid.appendChild(card);
         });
