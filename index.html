@@ -1498,13 +1498,11 @@
             </div>
             <div class="email-form-section reveal">
                 <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">直接发送邮件</h3>
-                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">填写以下表单，消息将直接发送到我的QQ邮箱</p>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">在下方填写消息内容，请务必写清楚你的联系方式和来电目的，消息将直接发送到我的QQ邮箱</p>
                 <form id="contactForm" style="max-width: 600px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <input type="email" name="user_email" placeholder="你的邮箱" required style="padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0ece4; font-size: 14px; transition: border-color 0.3s ease;">
-                        <input type="text" name="subject" placeholder="主题" required style="padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0ece4; font-size: 14px; transition: border-color 0.3s ease;">
-                    </div>
-                    <textarea name="message" placeholder="消息内容" required style="width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0ece4; font-size: 14px; min-height: 150px; resize: vertical; margin-bottom: 20px; transition: border-color 0.3s ease;"></textarea>
+                    <input type="hidden" name="user_email" value="1">
+                    <input type="hidden" name="subject" value="1">
+                    <textarea name="message" placeholder="请在此处写下你的消息内容。请务必在消息中写清楚你的联系方式（如邮箱、微信等）和来电目的，以便我及时回复。" required style="width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #f0ece4; font-size: 14px; min-height: 200px; resize: vertical; margin-bottom: 20px; transition: border-color 0.3s ease;"></textarea>
                     <button type="submit" style="padding: 14px 40px; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 8px; color: #00d4ff; cursor: pointer; font-size: 14px; letter-spacing: 2px; transition: all 0.3s ease;">发送消息</button>
                 </form>
             </div>
