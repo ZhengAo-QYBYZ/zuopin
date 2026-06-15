@@ -713,10 +713,13 @@
         }
         .card-img {
             width: 100%;
-            height: 100%;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
-            transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1), filter 0.6s ease;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
+        .card-img.loaded { opacity: 1; }
         .project-card:hover .card-img {
             transform: scale(1.08);
             filter: brightness(0.6);
@@ -1785,11 +1788,7 @@
             }
         ];
 
-        projects.forEach(p => {
-            new Image().src = p.thumb;
-            if (p.gallery) p.gallery.forEach(src => new Image().src = src);
-        });
-
+        
         const counters = [
             { target: 3, label: "年经验" },
             { target: 12, label: "完成项目" },
@@ -1977,7 +1976,7 @@
             const badgesHTML = (videoBadge || docBadge) ? `<div class="card-badges">${docBadge}${videoBadge}</div>` : '';
             card.innerHTML = `
                 <div class="card-img-wrap">
-                    <img class="card-img" src="${p.thumb}" alt="${p.title} - ${p.category}作品展示" loading="lazy" decoding="async">
+                    <img class="card-img" src="${p.thumb}" alt="${p.title} - ${p.category}作品展示" loading="lazy" decoding="async" onload="this.classList.add('loaded')">
                     <div class="card-img-overlay"></div>
                     <div class="card-inner-glow"></div>
                     ${badgesHTML}
@@ -1997,10 +1996,12 @@
             return card;
         }
 
-        // 渲染精选项目
+        // 渲染精选项目（添加高优先级）
         const featuredGrid = document.getElementById('projectsGrid');
         [0, 3, 2].forEach(i => {
             const card = createCard(projects[i], i);
+            const img = card.querySelector('.card-img');
+            if (img) img.setAttribute('fetchpriority', 'high');
             featuredGrid.appendChild(card);
         });
 
@@ -2532,6 +2533,7 @@
                 if (e.key === 'ArrowLeft') prevImg();
             }
         });
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 </body>
