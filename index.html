@@ -232,6 +232,7 @@
             z-index: 99998;
             transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
             mix-blend-mode: difference;
+            will-change: left, top;
         }
         .cursor-ring {
             position: fixed;
@@ -242,6 +243,7 @@
             pointer-events: none;
             z-index: 99997;
             transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1), height 0.4s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
+            will-change: left, top;
         }
         .cursor-ring.hovering {
             width: 56px;
@@ -263,6 +265,7 @@
             justify-content: space-between;
             align-items: center;
             transition: background 0.5s ease, backdrop-filter 0.5s ease, padding 0.4s ease;
+            will-change: background, backdrop-filter, padding;
         }
         nav.scrolled {
             background: rgba(6, 6, 8, 0.85);
@@ -282,6 +285,96 @@
         }
         .nav-logo span {
             color: var(--accent);
+        }
+        .lang-switcher {
+            display: flex;
+            gap: 2px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            padding: 2px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover {
+            color: var(--text-primary);
+        }
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+        }
+        .music-toggle {
+            position: relative;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            letter-spacing: 0.3px;
+            transition: color 0.3s ease;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .music-toggle:hover {
+            color: var(--accent);
+        }
+        .music-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(6,6,8,0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 8px 0;
+            min-width: 180px;
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .music-dropdown.show {
+            display: block;
+        }
+        .music-dropdown-header {
+            padding: 6px 16px 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--glass-border);
+            font-family: var(--font-display);
+        }
+        .music-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+            font-family: var(--font-body);
+        }
+        .music-item:hover {
+            background: rgba(0,212,255,0.08);
+            color: var(--accent);
+        }
+        .music-item.playing {
+            color: var(--accent);
+        }
+        .music-item.playing::after {
+            content: ' ♪';
+        }
+        .music-dropdown-footer {
+            padding: 8px 16px 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            min-height: 20px;
         }
         .nav-links {
             display: flex;
@@ -515,9 +608,10 @@
         }
 
         .section {
-            padding: 140px 10%;
+            padding: 120px 12%;
+            max-width: 1400px;
+            margin: 0 auto;
             position: relative;
-            z-index: 2;
         }
         .section-header {
             display: flex;
@@ -1347,7 +1441,6 @@
             .counter-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -1368,12 +1461,29 @@
     </button>
 
     <nav id="mainNav" role="navigation" aria-label="主导航">
-        <a class="nav-logo" href="#" aria-label="郑傲首页">郑<span>.</span>傲</a>
+        <div style="display:flex;align-items:center;gap:16px;">
+            <a class="nav-logo" href="#" aria-label="郑傲首页">郑<span>.</span>傲</a>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="zh" onclick="switchLang('zh')">中</button>
+                <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
+            </div>
+            <div class="music-toggle" id="musicToggle">
+                <span class="music-toggle-text" data-i18n="musicPrompt">🎵 想要来点音乐吗</span>
+                <div class="music-dropdown" id="musicDropdown">
+                    <div class="music-dropdown-header">🎵 选一首歌</div>
+                    <div class="music-item" data-src="music/Jar of Love.m4a">Jar of Love</div>
+                    <div class="music-item" data-src="music/爱情讯息.m4a">爱情讯息</div>
+                    <div class="music-item" data-src="music/放松.m4a">放松</div>
+                    <div class="music-dropdown-footer" id="musicNowPlaying"></div>
+                </div>
+            </div>
+            <audio id="musicPlayer" style="display:none"></audio>
+        </div>
         <ul class="nav-links">
-            <li><a href="docs/郑傲-简历.docx" download class="magnetic-link">下载我的简历</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="docs/郑傲-简历.docx" download class="magnetic-link" data-i18n="downloadResume">下载我的简历</a></li>
+            <li><a href="#projects" data-i18n="projects">Projects</a></li>
+            <li><a href="#about" data-i18n="about">About</a></li>
+            <li><a href="#contact" data-i18n="contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -1381,7 +1491,7 @@
         <div class="hero-bg" id="heroBg" role="img" aria-label="3D环境艺术作品展示"></div>
         <div class="hero-gradient"></div>
         <div class="hero-content">
-            <div class="hero-tag">3D Environment Artist</div>
+            <div class="hero-tag" data-i18n="heroTag">3D Environment Artist</div>
             <div class="hero-name-wrapper">
                 <h1 class="hero-name" id="heroName">郑傲</h1>
                 <div class="hero-clock" id="heroClock">
@@ -1389,7 +1499,7 @@
                     <div class="clock-time" id="clockTime"></div>
                 </div>
             </div>
-            <p class="hero-desc" id="heroDesc">专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。</p>
+            <p class="hero-desc" id="heroDesc" data-i18n="heroDesc">专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。</p>
         </div>
         <div class="hero-scroll" id="heroScroll" aria-hidden="true">
             <span>Scroll</span>
@@ -1413,7 +1523,7 @@
         <div class="projects-grid" id="projectsGrid"></div>
         <div class="more-projects-wrap">
             <button class="more-projects-btn" aria-label="查看更多作品" onclick="document.getElementById('all-projects').scrollIntoView({behavior:'smooth'})">
-                更多作品 <span class="arrow">&rarr;</span>
+                <span data-i18n="moreProjects">更多作品</span> <span class="arrow">&rarr;</span>
             </button>
         </div>
     </section>
@@ -1436,8 +1546,8 @@
         </div>
         <div class="about-grid">
             <div class="about-text reveal">
-                <p>我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。</p>
-                <p>工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。</p>
+                <p data-i18n="aboutP1">我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。</p>
+                <p data-i18n="aboutP2">工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。</p>
             </div>
             <div class="skills-grid reveal">
                 <div class="skill-item">Unreal Engine</div>
@@ -1478,21 +1588,21 @@
             <div class="section-line"></div>
         </div>
         <div class="reveal">
-            <p style="color:var(--text-muted); font-size:14px; line-height:2;">期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）</p>
+            <p style="color:var(--text-muted); font-size:14px; line-height:2;" data-i18n="contactDesc">期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）</p>
             <div class="contact-grid">
                 <div class="contact-card" id="emailCard" oncontextmenu="copyToClipboard('1917643166@qq.com', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
                     </div>
-                    <div class="contact-card-label">Email</div>
+                    <div class="contact-card-label" data-i18n="emailLabel">Email</div>
                     <div class="contact-card-value">1917643166@qq.com</div>
-                    <a href="mailto:1917643166@qq.com" style="display: inline-block; margin-top: 10px; font-size: 11px; color: var(--accent); text-decoration: none;">发送邮件</a>
+                    <a href="mailto:1917643166@qq.com" style="display: inline-block; margin-top: 10px; font-size: 11px; color: var(--accent); text-decoration: none;" data-i18n="sendEmail">发送邮件</a>
                 </div>
                 <div class="contact-card" id="wechatCard" style="cursor:default;" role="img" aria-label="微信号 AtlasStbz" oncontextmenu="copyToClipboard('AtlasStbz', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                     </div>
-                    <div class="contact-card-label">WeChat</div>
+                    <div class="contact-card-label" data-i18n="wechatLabel">WeChat</div>
                     <div class="contact-card-value">AtlasStbz</div>
                 </div>
             </div>
@@ -1629,6 +1739,21 @@
                 gallery: ["images/BOX/渲染2.png", "images/BOX/烘焙贴图包.png", "images/BOX/模型展示.png"]
             },
             {
+                title: "工地",
+                category: "灯光作品",
+                thumb: "images/light/fps/1.png",
+                desc: "一个废弃工地场景，模拟室内灯光环境。使用UE5 Lumen实时全局光照与反射，结合后期处理营造紧张刺激的FPS游戏环境。",
+                hasVideo: true,
+                videoUrl: "https://v.douyin.com/W8rPQxBK1uc/",
+                hasDoc: false,
+                documents: [],
+                meta: [
+                    { label: "工具", value: "UE5 Lumen" },
+                    { label: "时间", value: "2026.6" }
+                ],
+                gallery: ["images/light/fps/1.png", "images/light/fps/2.png"]
+            },
+            {
                 title: "巨型卡车设计",
                 category: "概念设计与创意",
                 thumb: "images/卡车1.png",
@@ -1642,6 +1767,21 @@
                     { label: "时间", value: "2026" }
                 ],
                 gallery: ["images/卡车2.png"]
+            },
+            {
+                title: "地牢",
+                category: "场景",
+                thumb: "images/DILAO/1.png",
+                desc: "一个地牢场景与灯光设计 全流程烘焙光照",
+                hasVideo: true,
+                videoUrl: "https://v.douyin.com/XmSu4BjzpnE/",
+                hasDoc: false,
+                documents: [],
+                meta: [
+                    { label: "工具", value: "Blender UE5" },
+                    { label: "时间", value: "2026.7" }
+                ],
+                gallery: ["images/DILAO/2.png", "images/DILAO/3.png"]
             }
         ];
 
@@ -1683,56 +1823,59 @@
 
         // 滚动进度条
         const scrollProgress = document.getElementById('scrollProgress');
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            scrollProgress.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
-        });
 
-        // 粒子效果 - 添加页面可见性暂停
+        // 粒子效果 - 低功耗优化
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let particles = [];
         let particleAnimId = null;
         let isPageVisible = true;
+        let resizeTimer = null;
 
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            createParticles();
+        }
+        // 防抖resize
+        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 200); });
         resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
 
         function createParticles() {
             particles = [];
-            const divisor = window.innerWidth < 768 ? 36000 : 18000;
-            const count = Math.floor((window.innerWidth * window.innerHeight) / divisor);
+            const isMobile = window.innerWidth < 768;
+            const isLowPerf = window.innerWidth < 1024;
+            const divisor = isMobile ? 60000 : (isLowPerf ? 30000 : 20000);
+            const count = Math.min(Math.floor((window.innerWidth * window.innerHeight) / divisor), 80);
             for (let i = 0; i < count; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.3,
-                    vy: (Math.random() - 0.5) * 0.3,
-                    size: Math.random() * 1.5 + 0.5,
-                    opacity: Math.random() * 0.3 + 0.05,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2,
+                    size: Math.random() * 1.2 + 0.3,
+                    opacity: Math.random() * 0.25 + 0.04,
                     pulse: Math.random() * Math.PI * 2
                 });
             }
         }
-        createParticles();
 
         function animateParticles() {
             if (!isPageVisible) { particleAnimId = null; return; }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.x += p.vx; p.y += p.vy; p.pulse += 0.01;
-                const currentOpacity = p.opacity + Math.sin(p.pulse) * 0.1;
+            for (let i = 0, len = particles.length; i < len; i++) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy; p.pulse += 0.008;
+                const currentOpacity = p.opacity + Math.sin(p.pulse) * 0.08;
                 if (p.x < 0) p.x = canvas.width;
                 if (p.x > canvas.width) p.x = 0;
                 if (p.y < 0) p.y = canvas.height;
                 if (p.y > canvas.height) p.y = 0;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 212, 255, ${Math.max(0, currentOpacity)})`;
+                ctx.fillStyle = `rgba(0, 212, 255, ${Math.max(0.02, currentOpacity)})`;
                 ctx.fill();
-            });
+            }
             particleAnimId = requestAnimationFrame(animateParticles);
         }
         animateParticles();
@@ -1742,23 +1885,44 @@
             if (isPageVisible && !particleAnimId) animateParticles();
         });
 
-        // 视差
+        // 视差 + 光标环动画（合并为一个rAF，鼠标离开后停止）
         const heroBg = document.getElementById('heroBg');
         const heroSection = document.getElementById('hero');
         let heroMouseX = 0, heroMouseY = 0, currentParallaxX = 0, currentParallaxY = 0;
+        let cursorAnimId = null, mouseInWindow = true, cursorActive = false;
         heroSection.addEventListener('mousemove', (e) => {
             const rect = heroSection.getBoundingClientRect();
             heroMouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
             heroMouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+            if (!cursorAnimId) cursorAnimId = requestAnimationFrame(animateCursor);
         });
         heroSection.addEventListener('mouseleave', () => { heroMouseX = 0; heroMouseY = 0; });
-        function animateParallax() {
+        function animateCursor() {
+            if (!mouseInWindow) { cursorAnimId = null; return; }
+            // 视差
             currentParallaxX += (heroMouseX * 30 - currentParallaxX) * 0.06;
             currentParallaxY += (heroMouseY * 20 - currentParallaxY) * 0.06;
             heroBg.style.transform = `translate(${currentParallaxX}px, ${currentParallaxY}px) scale(1.1)`;
-            requestAnimationFrame(animateParallax);
+            // 光标环跟随
+            ringX += (mouseX - ringX) * 0.1;
+            ringY += (mouseY - ringY) * 0.1;
+            ring.style.left = ringX - 18 + 'px';
+            ring.style.top = ringY - 18 + 'px';
+            cursorAnimId = requestAnimationFrame(animateCursor);
         }
-        animateParallax();
+        // 鼠标进入窗口时启动，离开时停止
+        document.addEventListener('mouseenter', () => { mouseInWindow = true; if (!cursorAnimId && cursorActive) cursorAnimId = requestAnimationFrame(animateCursor); });
+        document.addEventListener('mouseleave', () => { mouseInWindow = false; });
+        // 首次鼠标移动才启动整个动画
+        document.addEventListener('mousemove', function startCursorOnFirstMove(e) {
+            cursorActive = true;
+            mouseX = e.clientX; mouseY = e.clientY;
+            ringX = mouseX; ringY = mouseY;
+            dot.style.left = mouseX - 3 + 'px';
+            dot.style.top = mouseY - 3 + 'px';
+            if (!cursorAnimId) cursorAnimId = requestAnimationFrame(animateCursor);
+            document.removeEventListener('mousemove', startCursorOnFirstMove);
+        }, { once: true });
 
         // Glitch 名字动画
         function startGlitchTyping() {
@@ -1869,7 +2033,7 @@
 
         function renderFilters() {
             const filterBar = document.getElementById('filterBar');
-            const categories = ['全部', '场景', '模型', '概念设计与创意'];
+            const categories = ['全部', '场景', '模型', '灯光作品', '概念设计与创意'];
             filterBar.innerHTML = '';
             categories.forEach(cat => {
                 const btn = document.createElement('button');
@@ -1904,7 +2068,7 @@
             detailScrollPos = window.scrollY;
             const metaHTML = p.meta.map(m => `<div class="meta-item"><span class="meta-label">${m.label}</span><span class="meta-value">${m.value}</span></div>`).join('');
             const galleryHTML = p.gallery.map(src => `<img src="${src}" alt="${p.title} 作品截图" loading="lazy" decoding="async" onclick="openGalleryLightbox('${src}')">`).join('');
-            let videoHTML = p.hasVideo && p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" rel="noopener" class="detail-video-link"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>在 Bilibili 观看完整视频</a>` : '';
+            let videoHTML = p.hasVideo && p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" rel="noopener" class="detail-video-link"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>在 ${p.videoUrl.includes('bilibili') ? 'Bilibili' : '抖音'} 观看完整视频</a>` : '';
             let docsHTML = '';
             if (p.hasDoc && p.documents && p.documents.length) {
                 const docLinks = p.documents.map(d => {
@@ -1988,19 +2152,36 @@
         function prevImg() { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; lbImg.src = lbImages[lbIndex]; lbCounter.textContent = `${lbIndex+1} / ${lbImages.length}`; }
         lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
 
-        // 滚动揭示与计数器
+        // 滚动揭示、导航栏、回到顶部、进度条（合并为单一RAF节流，缓存DOM查询）
         const revealEls = document.querySelectorAll('.reveal');
+        const mainNav = document.getElementById('mainNav');
+        const backTop = document.getElementById('backTop');
+        const projectCards = () => document.querySelectorAll('.project-card');
+        const skillItems = () => document.querySelectorAll('.skill-item');
+        const counterGrid = () => document.querySelector('.counter-grid');
+        const counterNums = () => document.querySelectorAll('.counter-num');
         let countersAnimated = false;
-        function checkScroll() {
+        let scrollTicking = false;
+        function onScroll() {
+            const sy = window.scrollY;
             const wh = window.innerHeight;
-            revealEls.forEach(el => { if (el.getBoundingClientRect().top < wh - 60) el.classList.add('visible'); });
-            document.querySelectorAll('.project-card').forEach(el => { if (el.getBoundingClientRect().top < wh - 40) el.classList.add('visible'); });
-            document.querySelectorAll('.skill-item').forEach((el, i) => {
-                if (el.getBoundingClientRect().top < wh - 40) setTimeout(() => el.classList.add('visible'), i * 60);
-            });
-            if (!countersAnimated && document.querySelector('.counter-grid')?.getBoundingClientRect().top < wh - 60) {
+            const docHeight = document.documentElement.scrollHeight - wh;
+            // 导航 + 回到顶部 + 进度条
+            mainNav.classList.toggle('scrolled', sy > 80);
+            backTop.classList.toggle('show', sy > 600);
+            scrollProgress.style.width = (docHeight > 0 ? (sy / docHeight) * 100 : 0) + '%';
+            // 滚动揭示
+            for (const el of revealEls) { if (el.getBoundingClientRect().top < wh - 60) el.classList.add('visible'); }
+            for (const el of projectCards()) { if (el.getBoundingClientRect().top < wh - 40) el.classList.add('visible'); }
+            let si = 0;
+            for (const el of skillItems()) {
+                if (el.getBoundingClientRect().top < wh - 40) setTimeout(() => el.classList.add('visible'), si * 60);
+                si++;
+            }
+            // 计数器（仅一次）
+            if (!countersAnimated && counterGrid()?.getBoundingClientRect().top < wh - 60) {
                 countersAnimated = true;
-                document.querySelectorAll('.counter-num').forEach(el => {
+                for (const el of counterNums()) {
                     const target = parseInt(el.dataset.target);
                     const duration = 2000;
                     const start = performance.now();
@@ -2014,29 +2195,23 @@
                         else { el.textContent = target.toLocaleString() + '+'; el.classList.remove('animating'); }
                     }
                     requestAnimationFrame(update);
-                });
+                }
             }
+            scrollTicking = false;
         }
-        window.addEventListener('scroll', checkScroll);
-        window.addEventListener('resize', checkScroll);
-        checkScroll();
-
-        // 导航栏与回到顶部
-        const mainNav = document.getElementById('mainNav');
-        const backTop = document.getElementById('backTop');
-        window.addEventListener('scroll', () => {
-            const sy = window.scrollY;
-            mainNav.classList.toggle('scrolled', sy > 80);
-            backTop.classList.toggle('show', sy > 600);
-        });
+        function requestScrollTick() {
+            if (!scrollTicking) { scrollTicking = true; requestAnimationFrame(onScroll); }
+        }
+        window.addEventListener('scroll', requestScrollTick, { passive: true });
+        window.addEventListener('resize', requestScrollTick, { passive: true });
+        // 初始检查
+        requestScrollTick();
 
         // 自定义光标
         const dot = document.getElementById('cursorDot');
         const ring = document.getElementById('cursorRing');
         let mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
-        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; dot.style.left = mouseX - 3 + 'px'; dot.style.top = mouseY - 3 + 'px'; });
-        function animateRing() { ringX += (mouseX - ringX) * 0.1; ringY += (mouseY - ringY) * 0.1; ring.style.left = ringX - 18 + 'px'; ring.style.top = ringY - 18 + 'px'; requestAnimationFrame(animateRing); }
-        animateRing();
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; dot.style.left = mouseX - 3 + 'px'; dot.style.top = mouseY - 3 + 'px'; }, { passive: true });
         document.querySelectorAll('a, button, .project-card, .contact-card, .doc-link, .skill-item').forEach(el => {
             el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
             el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
@@ -2191,6 +2366,164 @@
             }
         })();
 
+        // 音乐播放器
+        const musicToggle = document.getElementById('musicToggle');
+        const musicDropdown = document.getElementById('musicDropdown');
+        const musicPlayer = document.getElementById('musicPlayer');
+        const nowPlaying = document.getElementById('musicNowPlaying');
+        let currentItem = null;
+
+        musicToggle.addEventListener('click', (e) => {
+            musicDropdown.classList.toggle('show');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', () => {
+            musicDropdown.classList.remove('show');
+        });
+
+        document.querySelectorAll('.music-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const src = item.dataset.src;
+                if (currentItem === item && !musicPlayer.paused) {
+                    musicPlayer.pause();
+                    item.classList.remove('playing');
+                    nowPlaying.textContent = '⏸ 已暂停';
+                    currentItem = null;
+                } else {
+                    if (currentItem) currentItem.classList.remove('playing');
+                    musicPlayer.src = src;
+                    musicPlayer.play();
+                    item.classList.add('playing');
+                    nowPlaying.textContent = '♫ ' + item.textContent;
+                    currentItem = item;
+                }
+            });
+        });
+
+        musicPlayer.addEventListener('ended', () => {
+            if (currentItem) {
+                currentItem.classList.remove('playing');
+                nowPlaying.textContent = '∎ 播放结束';
+                currentItem = null;
+            }
+        });
+
+        // 多语言系统
+        const translations = {
+            zh: {
+                downloadResume: '下载我的简历',
+                projects: 'Projects',
+                about: 'About',
+                contact: 'Contact',
+                heroTag: '3D Environment Artist',
+                heroDesc: '专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。',
+                moreProjects: '更多作品',
+                aboutP1: '我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。',
+                aboutP2: '工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。',
+                skillYears: '年经验',
+                skillProjects: '完成项目',
+                skillSoftware: '掌握软件',
+                skillHours: '创作小时',
+                musicPrompt: '🎵 想要来点音乐吗',
+                contactDesc: '期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）',
+                emailLabel: 'Email',
+                wechatLabel: 'WeChat',
+                sendEmail: '发送邮件',
+                emailFormTitle: '直接发送邮件',
+                emailFormDesc: '在下方填写消息内容，请务必写清楚你的联系方式和来电目的，消息将直接发送到我的QQ邮箱',
+                emailFormPlaceholder: '请在此处写下你的消息内容。请务必在消息中写清楚你的联系方式（如邮箱、微信等）和来电目的，以便我及时回复。',
+                emailFormBtn: '发送消息',
+                photoCaption: '这是我',
+                footerRights: '© 2025 郑傲. All rights reserved.',
+                footerTagline: 'Built with passion for 3D art'
+            },
+            en: {
+                downloadResume: 'Download Resume',
+                projects: 'Projects',
+                about: 'About',
+                contact: 'Contact',
+                heroTag: '3D Environment Artist',
+                heroDesc: 'Focused on 3D environmental art creation, exploring the boundaries of aesthetics and surreal spaces. Telling stories of uninhabited lands through light and materials.',
+                moreProjects: 'More Projects',
+                aboutP1: 'I am a creator focused on 3D environmental art, passionate about building narrative-driven virtual spaces. From post-apocalyptic ruins to futuristic cities, every scene carries unique emotions and stories.',
+                aboutP2: 'My workflow covers the complete pipeline from concept design, high-poly sculpting, material creation to lighting rendering. Proficient in Unreal Engine and Blender for scene building and real-time rendering.',
+                skillYears: 'Years Exp.',
+                skillProjects: 'Projects Done',
+                skillSoftware: 'Software Known',
+                skillHours: 'Hours Spent',
+                musicPrompt: '🎵 Want some music?',
+                contactDesc: 'Looking forward to connecting with you, whether for project collaboration or technical discussion. (Right-click to copy)',
+                emailLabel: 'Email',
+                wechatLabel: 'WeChat',
+                sendEmail: 'Send Email',
+                emailFormTitle: 'Send Email Directly',
+                emailFormDesc: 'Write your message below. Please make sure to include your contact info and purpose in the message. It will be sent directly to my QQ email.',
+                emailFormPlaceholder: 'Write your message here. Please include your contact info (email, WeChat, etc.) and the purpose of your message so I can respond promptly.',
+                emailFormBtn: 'Send Message',
+                photoCaption: 'This is me',
+                footerRights: '© 2025 Zheng Ao. All rights reserved.',
+                footerTagline: 'Built with passion for 3D art'
+            },
+        };
+
+        function applyLang(lang) {
+            if (!translations[lang]) return;
+            const t = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        if (el.hasAttribute('placeholder')) el.setAttribute('placeholder', t[key]);
+                    } else if (el.tagName === 'BUTTON' && el.type === 'submit') {
+                        el.textContent = t[key];
+                    } else {
+                        el.textContent = t[key];
+                    }
+                }
+            });
+            // 更新计数器标签
+            document.querySelectorAll('.counter-label').forEach(el => {
+                const text = el.textContent;
+                if (text.includes('年经验')) el.textContent = t.skillYears;
+                else if (text.includes('完成项目')) el.textContent = t.skillProjects;
+                else if (text.includes('掌握软件')) el.textContent = t.skillSoftware;
+                else if (text.includes('创作小时')) el.textContent = t.skillHours;
+            });
+            // 更新照片说明
+            const photoCaption = document.querySelector('.photo-caption');
+            if (photoCaption) photoCaption.textContent = t.photoCaption;
+            // 更新邮箱表单
+            const emailFormTitle = document.querySelector('.email-form-section h3');
+            if (emailFormTitle) emailFormTitle.textContent = t.emailFormTitle;
+            const emailFormDesc = document.querySelector('.email-form-section > p');
+            if (emailFormDesc) emailFormDesc.textContent = t.emailFormDesc;
+            const emailFormTextarea = document.querySelector('.email-form-section textarea[name="message"]');
+            if (emailFormTextarea) emailFormTextarea.setAttribute('placeholder', t.emailFormPlaceholder);
+            const emailFormBtn = document.querySelector('.email-form-section button[type="submit"]');
+            if (emailFormBtn) emailFormBtn.textContent = t.emailFormBtn;
+            // 更新footer
+            const footerSpans = document.querySelectorAll('footer span');
+            if (footerSpans.length >= 2) {
+                footerSpans[0].textContent = t.footerRights;
+                footerSpans[1].textContent = t.footerTagline;
+            }
+            // 更新语言按钮状态
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        function switchLang(lang) {
+            applyLang(lang);
+        }
+
+        // 初始化语言
+        const savedLang = localStorage.getItem('preferredLang') || 'zh';
+        applyLang(savedLang);
+
         // 键盘操作
         document.addEventListener('keydown', (e) => {
             if (lightbox.classList.contains('show')) {
@@ -2200,5 +2533,6 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 </body>
 </html>
