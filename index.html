@@ -15,6 +15,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
     <link rel="preload" as="image" href="images/work1.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="images/CuteRoom.png" fetchpriority="high">
+    <link rel="preload" as="image" href="images/RE9_1.png" fetchpriority="high">
+    <link rel="preload" as="image" href="images/feitu.png" fetchpriority="high">
     <style>
         :root {
             --bg: #060608;
@@ -285,96 +288,6 @@
         }
         .nav-logo span {
             color: var(--accent);
-        }
-        .lang-switcher {
-            display: flex;
-            gap: 2px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            padding: 2px;
-        }
-        .lang-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-family: var(--font-body);
-            font-size: 10px;
-            letter-spacing: 0.5px;
-            padding: 4px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .lang-btn:hover {
-            color: var(--text-primary);
-        }
-        .lang-btn.active {
-            background: var(--accent);
-            color: var(--bg);
-        }
-        .music-toggle {
-            position: relative;
-            cursor: pointer;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-family: var(--font-body);
-            letter-spacing: 0.3px;
-            transition: color 0.3s ease;
-            user-select: none;
-            white-space: nowrap;
-        }
-        .music-toggle:hover {
-            color: var(--accent);
-        }
-        .music-dropdown {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(6,6,8,0.95);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 8px 0;
-            min-width: 180px;
-            backdrop-filter: blur(12px);
-            z-index: 100;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-        .music-dropdown.show {
-            display: block;
-        }
-        .music-dropdown-header {
-            padding: 6px 16px 10px;
-            font-size: 12px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--glass-border);
-            font-family: var(--font-display);
-        }
-        .music-item {
-            padding: 10px 16px;
-            font-size: 13px;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease;
-            font-family: var(--font-body);
-        }
-        .music-item:hover {
-            background: rgba(0,212,255,0.08);
-            color: var(--accent);
-        }
-        .music-item.playing {
-            color: var(--accent);
-        }
-        .music-item.playing::after {
-            content: ' ♪';
-        }
-        .music-dropdown-footer {
-            padding: 8px 16px 4px;
-            font-size: 11px;
-            color: var(--text-muted);
-            min-height: 20px;
         }
         .nav-links {
             display: flex;
@@ -710,16 +623,32 @@
             position: relative;
             overflow: hidden;
             height: 300px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.03) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        .card-img-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            animation: shimmer 1.5s infinite;
+            z-index: 1;
+        }
+        .card-img-wrap:has(.loaded)::before { display: none; }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         .card-img {
             width: 100%;
-            aspect-ratio: 16 / 9;
+            height: 100%;
             object-fit: cover;
             display: block;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            filter: blur(12px);
+            transform: scale(1.05);
+            transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
         }
-        .card-img.loaded { opacity: 1; }
+        .card-img.loaded { opacity: 1; filter: blur(0); transform: scale(1); }
         .project-card:hover .card-img {
             transform: scale(1.08);
             filter: brightness(0.6);
@@ -1464,29 +1393,12 @@
     </button>
 
     <nav id="mainNav" role="navigation" aria-label="主导航">
-        <div style="display:flex;align-items:center;gap:16px;">
-            <a class="nav-logo" href="#" aria-label="郑傲首页">郑<span>.</span>傲</a>
-            <div class="lang-switcher">
-                <button class="lang-btn active" data-lang="zh" onclick="switchLang('zh')">中</button>
-                <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
-            </div>
-            <div class="music-toggle" id="musicToggle">
-                <span class="music-toggle-text" data-i18n="musicPrompt">🎵 想要来点音乐吗</span>
-                <div class="music-dropdown" id="musicDropdown">
-                    <div class="music-dropdown-header">🎵 选一首歌</div>
-                    <div class="music-item" data-src="music/Jar of Love.m4a">Jar of Love</div>
-                    <div class="music-item" data-src="music/爱情讯息.m4a">爱情讯息</div>
-                    <div class="music-item" data-src="music/放松.m4a">放松</div>
-                    <div class="music-dropdown-footer" id="musicNowPlaying"></div>
-                </div>
-            </div>
-            <audio id="musicPlayer" style="display:none"></audio>
-        </div>
+        <a class="nav-logo" href="#" aria-label="郑傲首页">郑<span>.</span>傲</a>
         <ul class="nav-links">
-            <li><a href="docs/郑傲-简历.docx" download class="magnetic-link" data-i18n="downloadResume">下载我的简历</a></li>
-            <li><a href="#projects" data-i18n="projects">Projects</a></li>
-            <li><a href="#about" data-i18n="about">About</a></li>
-            <li><a href="#contact" data-i18n="contact">Contact</a></li>
+            <li><a href="docs/郑傲-简历.docx" download class="magnetic-link">下载我的简历</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -1494,7 +1406,7 @@
         <div class="hero-bg" id="heroBg" role="img" aria-label="3D环境艺术作品展示"></div>
         <div class="hero-gradient"></div>
         <div class="hero-content">
-            <div class="hero-tag" data-i18n="heroTag">3D Environment Artist</div>
+            <div class="hero-tag">3D Environment Artist</div>
             <div class="hero-name-wrapper">
                 <h1 class="hero-name" id="heroName">郑傲</h1>
                 <div class="hero-clock" id="heroClock">
@@ -1502,7 +1414,7 @@
                     <div class="clock-time" id="clockTime"></div>
                 </div>
             </div>
-            <p class="hero-desc" id="heroDesc" data-i18n="heroDesc">专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。</p>
+            <p class="hero-desc" id="heroDesc">专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。</p>
         </div>
         <div class="hero-scroll" id="heroScroll" aria-hidden="true">
             <span>Scroll</span>
@@ -1526,7 +1438,7 @@
         <div class="projects-grid" id="projectsGrid"></div>
         <div class="more-projects-wrap">
             <button class="more-projects-btn" aria-label="查看更多作品" onclick="document.getElementById('all-projects').scrollIntoView({behavior:'smooth'})">
-                <span data-i18n="moreProjects">更多作品</span> <span class="arrow">&rarr;</span>
+                <span>更多作品</span> <span class="arrow">&rarr;</span>
             </button>
         </div>
     </section>
@@ -1549,8 +1461,8 @@
         </div>
         <div class="about-grid">
             <div class="about-text reveal">
-                <p data-i18n="aboutP1">我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。</p>
-                <p data-i18n="aboutP2">工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。</p>
+                <p>我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。</p>
+                <p>工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。</p>
             </div>
             <div class="skills-grid reveal">
                 <div class="skill-item">Unreal Engine</div>
@@ -1591,21 +1503,21 @@
             <div class="section-line"></div>
         </div>
         <div class="reveal">
-            <p style="color:var(--text-muted); font-size:14px; line-height:2;" data-i18n="contactDesc">期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）</p>
+            <p style="color:var(--text-muted); font-size:14px; line-height:2;">期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）</p>
             <div class="contact-grid">
                 <div class="contact-card" id="emailCard" oncontextmenu="copyToClipboard('1917643166@qq.com', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
                     </div>
-                    <div class="contact-card-label" data-i18n="emailLabel">Email</div>
+                    <div class="contact-card-label">Email</div>
                     <div class="contact-card-value">1917643166@qq.com</div>
-                    <a href="mailto:1917643166@qq.com" style="display: inline-block; margin-top: 10px; font-size: 11px; color: var(--accent); text-decoration: none;" data-i18n="sendEmail">发送邮件</a>
+                    <a href="mailto:1917643166@qq.com" style="display: inline-block; margin-top: 10px; font-size: 11px; color: var(--accent); text-decoration: none;">发送邮件</a>
                 </div>
                 <div class="contact-card" id="wechatCard" style="cursor:default;" role="img" aria-label="微信号 AtlasStbz" oncontextmenu="copyToClipboard('AtlasStbz', event)">
                     <div class="contact-card-icon">
                         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                     </div>
-                    <div class="contact-card-label" data-i18n="wechatLabel">WeChat</div>
+                    <div class="contact-card-label">WeChat</div>
                     <div class="contact-card-value">AtlasStbz</div>
                 </div>
             </div>
@@ -1757,21 +1669,6 @@
                 gallery: ["images/light/fps/1.png", "images/light/fps/2.png"]
             },
             {
-                title: "巨型卡车设计",
-                category: "概念设计与创意",
-                thumb: "images/卡车1.png",
-                desc: "这是一个我原创的卡车，由于时间原因完成度不高，不过对于增强了我对硬表面的探索，以此留念。",
-                hasVideo: false,
-                videoUrl: "",
-                hasDoc: false,
-                documents: [],
-                meta: [
-                    { label: "工具", value: "Blender+SP" },
-                    { label: "时间", value: "2026" }
-                ],
-                gallery: ["images/卡车2.png"]
-            },
-            {
                 title: "地牢",
                 category: "场景",
                 thumb: "images/DILAO/1.png",
@@ -1785,6 +1682,52 @@
                     { label: "时间", value: "2026.7" }
                 ],
                 gallery: ["images/DILAO/2.png", "images/DILAO/3.png"]
+            },
+            {
+                title: "个人思路与文档整理",
+                category: "SD专项",
+                thumb: "images/sd-icon.svg",
+                desc: "个人SD学习过程中的思路整理与参考资料汇总。",
+                hasVideo: false,
+                videoUrl: "",
+                hasDoc: true,
+                documents: [
+                    { name: "SD_Class01 笔记", url: "docs/SD/SD_class01.pdf", type: "pdf" }
+                ],
+                meta: [
+                    { label: "工具", value: "Substance Designer" }
+                ],
+                gallery: []
+            },
+            {
+                title: "雪域一角",
+                category: "概念设计与创意",
+                thumb: "images/GN/雪域一角.png",
+                desc: "雪域场景概念设计，探索高海拔寒冷环境的氛围与光影表现。",
+                hasVideo: false,
+                videoUrl: "",
+                hasDoc: false,
+                documents: [],
+                meta: [
+                    { label: "工具", value: "Blender" },
+                    { label: "时间", value: "2026.7" }
+                ],
+                gallery: []
+            },
+            {
+                title: "赛博城市",
+                category: "概念设计与创意",
+                thumb: "images/GN/cyb.png",
+                desc: "赛博朋克风格城市概念设计，霓虹灯光与未来都市氛围的视觉探索。",
+                hasVideo: false,
+                videoUrl: "",
+                hasDoc: false,
+                documents: [],
+                meta: [
+                    { label: "工具", value: "Blender" },
+                    { label: "时间", value: "2026.7" }
+                ],
+                gallery: []
             }
         ];
 
@@ -1976,7 +1919,7 @@
             const badgesHTML = (videoBadge || docBadge) ? `<div class="card-badges">${docBadge}${videoBadge}</div>` : '';
             card.innerHTML = `
                 <div class="card-img-wrap">
-                    <img class="card-img" src="${p.thumb}" alt="${p.title} - ${p.category}作品展示" loading="lazy" decoding="async" onload="this.classList.add('loaded')">
+                    <img class="card-img" src="${p.thumb || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" alt="${p.title} - ${p.category}作品展示" loading="lazy" decoding="async" width="640" height="360" onload="this.classList.add('loaded')">
                     <div class="card-img-overlay"></div>
                     <div class="card-inner-glow"></div>
                     ${badgesHTML}
@@ -2034,7 +1977,7 @@
 
         function renderFilters() {
             const filterBar = document.getElementById('filterBar');
-            const categories = ['全部', '场景', '模型', '灯光作品', '概念设计与创意'];
+            const categories = ['全部', '场景', '模型', '灯光作品', '概念设计与创意', 'SD专项'];
             filterBar.innerHTML = '';
             categories.forEach(cat => {
                 const btn = document.createElement('button');
@@ -2068,7 +2011,7 @@
             const p = projects[index];
             detailScrollPos = window.scrollY;
             const metaHTML = p.meta.map(m => `<div class="meta-item"><span class="meta-label">${m.label}</span><span class="meta-value">${m.value}</span></div>`).join('');
-            const galleryHTML = p.gallery.map(src => `<img src="${src}" alt="${p.title} 作品截图" loading="lazy" decoding="async" onclick="openGalleryLightbox('${src}')">`).join('');
+            const galleryHTML = p.gallery.map(src => `<img src="${src}" alt="${p.title} 作品截图" loading="lazy" decoding="async" width="800" height="450" style="opacity:0;filter:blur(8px);transition:opacity 0.5s,filter 0.5s" onload="this.style.opacity=1;this.style.filter='none'">`).join('');
             let videoHTML = p.hasVideo && p.videoUrl ? `<a href="${p.videoUrl}" target="_blank" rel="noopener" class="detail-video-link"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>在 ${p.videoUrl.includes('bilibili') ? 'Bilibili' : '抖音'} 观看完整视频</a>` : '';
             let docsHTML = '';
             if (p.hasDoc && p.documents && p.documents.length) {
@@ -2100,7 +2043,7 @@
             `;
 
             detailContent.innerHTML = `
-                <img class="detail-hero-img" src="${p.thumb}" alt="${p.title} 主图">
+                <img class="detail-hero-img" src="${p.thumb}" alt="${p.title} 主图" style="opacity:0;filter:blur(10px);transition:opacity 0.5s,filter 0.5s" onload="this.style.opacity=1;this.style.filter='none'">
                 <div class="detail-category">${p.category}</div>
                 <h2 class="detail-title">${p.title}</h2>
                 ${videoHTML}
@@ -2366,164 +2309,6 @@
                 });
             }
         })();
-
-        // 音乐播放器
-        const musicToggle = document.getElementById('musicToggle');
-        const musicDropdown = document.getElementById('musicDropdown');
-        const musicPlayer = document.getElementById('musicPlayer');
-        const nowPlaying = document.getElementById('musicNowPlaying');
-        let currentItem = null;
-
-        musicToggle.addEventListener('click', (e) => {
-            musicDropdown.classList.toggle('show');
-            e.stopPropagation();
-        });
-
-        document.addEventListener('click', () => {
-            musicDropdown.classList.remove('show');
-        });
-
-        document.querySelectorAll('.music-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const src = item.dataset.src;
-                if (currentItem === item && !musicPlayer.paused) {
-                    musicPlayer.pause();
-                    item.classList.remove('playing');
-                    nowPlaying.textContent = '⏸ 已暂停';
-                    currentItem = null;
-                } else {
-                    if (currentItem) currentItem.classList.remove('playing');
-                    musicPlayer.src = src;
-                    musicPlayer.play();
-                    item.classList.add('playing');
-                    nowPlaying.textContent = '♫ ' + item.textContent;
-                    currentItem = item;
-                }
-            });
-        });
-
-        musicPlayer.addEventListener('ended', () => {
-            if (currentItem) {
-                currentItem.classList.remove('playing');
-                nowPlaying.textContent = '∎ 播放结束';
-                currentItem = null;
-            }
-        });
-
-        // 多语言系统
-        const translations = {
-            zh: {
-                downloadResume: '下载我的简历',
-                projects: 'Projects',
-                about: 'About',
-                contact: 'Contact',
-                heroTag: '3D Environment Artist',
-                heroDesc: '专注于三维环境艺术创作，探索美学与超现实空间的边界。用光影与材质讲述无人之地的故事。',
-                moreProjects: '更多作品',
-                aboutP1: '我是一名专注于三维环境艺术的创作者，热衷于构建富有叙事感的虚拟空间。从废土废墟到未来都市，每一个场景都承载着独特的情感与故事。',
-                aboutP2: '工作流程涵盖概念设计、高模雕刻、材质制作、灯光渲染等完整环节，擅长使用 Unreal Engine 与 Blender 进行场景搭建与实时渲染。',
-                skillYears: '年经验',
-                skillProjects: '完成项目',
-                skillSoftware: '掌握软件',
-                skillHours: '创作小时',
-                musicPrompt: '🎵 想要来点音乐吗',
-                contactDesc: '期待与你交流，无论是项目合作还是技术探讨。（右键复制号码）',
-                emailLabel: 'Email',
-                wechatLabel: 'WeChat',
-                sendEmail: '发送邮件',
-                emailFormTitle: '直接发送邮件',
-                emailFormDesc: '在下方填写消息内容，请务必写清楚你的联系方式和来电目的，消息将直接发送到我的QQ邮箱',
-                emailFormPlaceholder: '请在此处写下你的消息内容。请务必在消息中写清楚你的联系方式（如邮箱、微信等）和来电目的，以便我及时回复。',
-                emailFormBtn: '发送消息',
-                photoCaption: '这是我',
-                footerRights: '© 2025 郑傲. All rights reserved.',
-                footerTagline: 'Built with passion for 3D art'
-            },
-            en: {
-                downloadResume: 'Download Resume',
-                projects: 'Projects',
-                about: 'About',
-                contact: 'Contact',
-                heroTag: '3D Environment Artist',
-                heroDesc: 'Focused on 3D environmental art creation, exploring the boundaries of aesthetics and surreal spaces. Telling stories of uninhabited lands through light and materials.',
-                moreProjects: 'More Projects',
-                aboutP1: 'I am a creator focused on 3D environmental art, passionate about building narrative-driven virtual spaces. From post-apocalyptic ruins to futuristic cities, every scene carries unique emotions and stories.',
-                aboutP2: 'My workflow covers the complete pipeline from concept design, high-poly sculpting, material creation to lighting rendering. Proficient in Unreal Engine and Blender for scene building and real-time rendering.',
-                skillYears: 'Years Exp.',
-                skillProjects: 'Projects Done',
-                skillSoftware: 'Software Known',
-                skillHours: 'Hours Spent',
-                musicPrompt: '🎵 Want some music?',
-                contactDesc: 'Looking forward to connecting with you, whether for project collaboration or technical discussion. (Right-click to copy)',
-                emailLabel: 'Email',
-                wechatLabel: 'WeChat',
-                sendEmail: 'Send Email',
-                emailFormTitle: 'Send Email Directly',
-                emailFormDesc: 'Write your message below. Please make sure to include your contact info and purpose in the message. It will be sent directly to my QQ email.',
-                emailFormPlaceholder: 'Write your message here. Please include your contact info (email, WeChat, etc.) and the purpose of your message so I can respond promptly.',
-                emailFormBtn: 'Send Message',
-                photoCaption: 'This is me',
-                footerRights: '© 2025 Zheng Ao. All rights reserved.',
-                footerTagline: 'Built with passion for 3D art'
-            },
-        };
-
-        function applyLang(lang) {
-            if (!translations[lang]) return;
-            const t = translations[lang];
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        if (el.hasAttribute('placeholder')) el.setAttribute('placeholder', t[key]);
-                    } else if (el.tagName === 'BUTTON' && el.type === 'submit') {
-                        el.textContent = t[key];
-                    } else {
-                        el.textContent = t[key];
-                    }
-                }
-            });
-            // 更新计数器标签
-            document.querySelectorAll('.counter-label').forEach(el => {
-                const text = el.textContent;
-                if (text.includes('年经验')) el.textContent = t.skillYears;
-                else if (text.includes('完成项目')) el.textContent = t.skillProjects;
-                else if (text.includes('掌握软件')) el.textContent = t.skillSoftware;
-                else if (text.includes('创作小时')) el.textContent = t.skillHours;
-            });
-            // 更新照片说明
-            const photoCaption = document.querySelector('.photo-caption');
-            if (photoCaption) photoCaption.textContent = t.photoCaption;
-            // 更新邮箱表单
-            const emailFormTitle = document.querySelector('.email-form-section h3');
-            if (emailFormTitle) emailFormTitle.textContent = t.emailFormTitle;
-            const emailFormDesc = document.querySelector('.email-form-section > p');
-            if (emailFormDesc) emailFormDesc.textContent = t.emailFormDesc;
-            const emailFormTextarea = document.querySelector('.email-form-section textarea[name="message"]');
-            if (emailFormTextarea) emailFormTextarea.setAttribute('placeholder', t.emailFormPlaceholder);
-            const emailFormBtn = document.querySelector('.email-form-section button[type="submit"]');
-            if (emailFormBtn) emailFormBtn.textContent = t.emailFormBtn;
-            // 更新footer
-            const footerSpans = document.querySelectorAll('footer span');
-            if (footerSpans.length >= 2) {
-                footerSpans[0].textContent = t.footerRights;
-                footerSpans[1].textContent = t.footerTagline;
-            }
-            // 更新语言按钮状态
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
-            });
-            localStorage.setItem('preferredLang', lang);
-        }
-
-        function switchLang(lang) {
-            applyLang(lang);
-        }
-
-        // 初始化语言
-        const savedLang = localStorage.getItem('preferredLang') || 'zh';
-        applyLang(savedLang);
 
         // 键盘操作
         document.addEventListener('keydown', (e) => {
