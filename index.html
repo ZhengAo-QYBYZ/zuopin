@@ -1655,7 +1655,7 @@
             },
             {
                 title: "工地",
-                category: "灯光作品",
+                category: "灯光专项",
                 thumb: "images/light/fps/1.png",
                 desc: "一个废弃工地场景，模拟室内灯光环境。使用UE5 Lumen实时全局光照与反射，结合后期处理营造紧张刺激的FPS游戏环境。",
                 hasVideo: true,
@@ -1725,6 +1725,25 @@
                 documents: [],
                 meta: [
                     { label: "工具", value: "Blender" },
+                    { label: "时间", value: "2026.7" }
+                ],
+                gallery: []
+            },
+            {
+                title: "灯光学习笔记",
+                category: "灯光专项",
+                thumb: "images/ue-icon.svg",
+                desc: "UE灯光学习过程中的笔记与设置参考，涵盖GPU Lightmass参数、场景布光思路等内容。",
+                hasVideo: false,
+                videoUrl: "",
+                hasDoc: true,
+                documents: [
+                    { name: "GPU Lightmass设置", url: "docs/灯光学习笔记/GPU Lightmass设置.png", type: "pdf" },
+                    { name: "我的Lightmass设置", url: "docs/灯光学习笔记/我的Lightmass设置.png", type: "pdf" },
+                    { name: "week2—1 笔记", url: "docs/灯光学习笔记/week2—1.docx", type: "docx" }
+                ],
+                meta: [
+                    { label: "工具", value: "Unreal Engine" },
                     { label: "时间", value: "2026.7" }
                 ],
                 gallery: []
@@ -1977,7 +1996,7 @@
 
         function renderFilters() {
             const filterBar = document.getElementById('filterBar');
-            const categories = ['全部', '场景', '模型', '灯光作品', '概念设计与创意', 'SD专项'];
+            const categories = ['全部', '场景', '模型', '概念设计与创意', 'SD专项', '灯光专项'];
             filterBar.innerHTML = '';
             categories.forEach(cat => {
                 const btn = document.createElement('button');
