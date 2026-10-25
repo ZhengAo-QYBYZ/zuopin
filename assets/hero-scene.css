@@ -1,0 +1,13 @@
+/* Background only. All page typography, placement and section sizing stay in styles.css. */
+#heroBg { inset: 0; background: #070c12; filter: none; transform: none !important; transition: none; will-change: auto; }
+#heroCanvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1.1s ease; }
+.scene-ready #heroCanvas { opacity: 1; }
+#hero .hero-gradient { pointer-events: none; background: linear-gradient(90deg, rgba(6,6,8,.6), rgba(6,6,8,.12) 43%, transparent 65%), linear-gradient(0deg, var(--bg), transparent 26%, transparent 90%, rgba(6,6,8,.16)); }
+.scene-fallback { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 73% 47%, #183a40, #070c12 55%); transition: opacity .5s; }
+.scene-ready .scene-fallback { opacity: 0; }
+.fallback-portal { position: absolute; width: 17%; height: 42%; top: 23%; left: 64%; border: 22px solid #273e42; transform: perspective(800px) rotateY(-28deg) rotateZ(-14deg); box-shadow: inset 0 0 0 2px #b5e8e1, 4px 2px 0 2px #7a968c, 0 0 90px #74ced834; }
+.fallback-portal::after { content: ''; position: absolute; width: 3px; height: 80%; left: 50%; top: 10%; background: #d0fff4; box-shadow: 0 0 35px 9px #97e4db6b; }
+.fallback-orbit { position: absolute; width: 40%; aspect-ratio: 1; left: 52%; top: 12%; border: 1px solid #6aada37a; border-radius: 50%; transform: perspective(800px) rotateY(45deg) rotateZ(-25deg); }
+#sceneToggle { position: absolute; right: 5%; bottom: 40px; z-index: 3; padding: 10px 14px; color: #93a6ad; border: 1px solid #829da333; border-radius: 5px; background: #080e1580; font: 11px var(--font-body); cursor: pointer; }
+#sceneToggle:hover { color: #cff2e8; border-color: #94c9b980; }
+@media (prefers-reduced-motion: reduce) { #heroCanvas, .scene-fallback { transition: none; } }
