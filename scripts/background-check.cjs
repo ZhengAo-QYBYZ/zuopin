@@ -1,5 +1,5 @@
-// Requires Playwright + Edge. Layout fixture verification/pre-void-index.html is the
-// unchanged index.html extracted from backups/before-void-core-20261020-234242.zip.
+// Requires Playwright + Edge. The historical layout fixture is retained locally
+// at verification/pre-void-index.html; old full-site snapshot archives were removed.
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');

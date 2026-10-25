@@ -4,6 +4,8 @@
 
 ## 更新内容
 
+2026-10-26 已更新简历下载为 `docs/郑傲简历.pdf`，保持提供的 PDF 原样。已按当前网页与作品数据的引用关系清理未使用的图片、展示副本、旧简历及遗留占位文件，保留全部 16 个展示条目。旧网页备份快照已移除，版本恢复使用 Git 提交记录。
+
 2026-10-26 已根据最新作品集新增 6 组作品：社区球场、对马岛之魂、桃园、教堂 TOD、二战 · 战时街道、湖畔小屋，共导入 29 张原始图片。前三组同时加入首页精选，原有作品保留。二战与战时街道合并展示同一场景的不同灯光版本。
 
 新增图片位于 `images/portfolio-2026/`，对应展示副本位于 `images/optimized/portfolio-2026/`。项目可使用 `galleryCaptions` 对象为相册图片添加说明，键为图片路径，值为说明文字。社区球场保留 AI 模型及外部素材的来源与个人贡献说明。对马岛之魂在作品集两页分别标注 14 天与 21 天，网页暂不展示该制作周期。
@@ -72,12 +74,10 @@ node scripts/browser-check.cjs
 
 已完成本地模拟测试；尚未验证 EmailJS 后台的当前额度、模板配置、域名许可及真实收件情况。正式上线后可由你发送一封测试邮件确认。公开 Key 是浏览器服务所需的客户端标识，管理密钥不能放入网页。
 
-线上网站：[郑傲作品集](https://zhengao-qybyz.github.io/zuopin/)。网站仓库为 `ZhengAo-QYBYZ/zuopin`，更新推送到 `main` 分支后由 GitHub Pages 自动发布。原始网页备份为 `backups/index.before-optimization.html`，恢复时复制它覆盖 `index.html`；原始图片和文档保持在原位置。`backups/`、`verification/`、`scripts/` 和本说明无需上传到线上。
+线上网站：[郑傲作品集](https://zhengao-qybyz.github.io/zuopin/)。网站仓库为 `ZhengAo-QYBYZ/zuopin`，更新推送到 `main` 分支后由 GitHub Pages 自动发布。`backups/` 和 `verification/` 仅用于本地工作，不会提交。当前部署用的 Git 工作副本位于 `backups/deploy-zuopin-20261026/`。
 
-## 三维背景与本次备份
-
-更换动效前的完整版本在 `backups/before-void-core-20261020-234242.zip`，含当时的网页、资源、图片、文档与脚本。建议解压到新文件夹即可独立浏览旧版，也可用其中的文件恢复当前版本。
+## 三维背景
 
 背景采用本地保存的 Three.js r160（许可证在 `assets/vendor/THREE-LICENSE.txt`），不依赖在线 CDN、模型或视频。鼠标移动会轻微改变视角和核心光照；右下角可以暂停或恢复。滚出首屏及页面切到后台时停止连续渲染，系统开启减少动态效果时默认静止。WebGL 不可用时显示静态几何背景。渲染像素数设有上限，持续低帧率时会降低内部渲染分辨率。
 
-`node scripts/background-check.cjs` 可检查背景动效及与备份的布局一致性；需安装 Playwright、Microsoft Edge，并先按脚本说明准备布局基准文件。
+`node scripts/background-check.cjs` 可检查背景动效及与历史基准的布局一致性；需安装 Playwright、Microsoft Edge，以及本地保留的 `verification/pre-void-index.html` 布局基准文件。

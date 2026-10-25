@@ -108,24 +108,6 @@ window.portfolioImages = {
       }
     ]
   },
-  "images/GN/雪域一角.png": {
-    "width": 1672,
-    "height": 941,
-    "variants": [
-      {
-        "src": "images/optimized/GN/雪域一角-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/GN/雪域一角-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/GN/雪域一角-1920.webp",
-        "width": 1672
-      }
-    ]
-  },
   "images/light/fps/1.png": {
     "width": 4830,
     "height": 2270,
@@ -158,96 +140,6 @@ window.portfolioImages = {
       },
       {
         "src": "images/optimized/light/fps/2-1920.webp",
-        "width": 1920
-      }
-    ]
-  },
-  "images/light/fps/3.png": {
-    "width": 4830,
-    "height": 2270,
-    "variants": [
-      {
-        "src": "images/optimized/light/fps/3-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/light/fps/3-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/light/fps/3-1920.webp",
-        "width": 1920
-      }
-    ]
-  },
-  "images/light/fps/4.png": {
-    "width": 4830,
-    "height": 2270,
-    "variants": [
-      {
-        "src": "images/optimized/light/fps/4-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/light/fps/4-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/light/fps/4-1920.webp",
-        "width": 1920
-      }
-    ]
-  },
-  "images/light/fps/5.png": {
-    "width": 4830,
-    "height": 2270,
-    "variants": [
-      {
-        "src": "images/optimized/light/fps/5-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/light/fps/5-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/light/fps/5-1920.webp",
-        "width": 1920
-      }
-    ]
-  },
-  "images/light/fps/6.png": {
-    "width": 4830,
-    "height": 2270,
-    "variants": [
-      {
-        "src": "images/optimized/light/fps/6-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/light/fps/6-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/light/fps/6-1920.webp",
-        "width": 1920
-      }
-    ]
-  },
-  "images/light/fps/7.png": {
-    "width": 2929,
-    "height": 1310,
-    "variants": [
-      {
-        "src": "images/optimized/light/fps/7-480.webp",
-        "width": 480
-      },
-      {
-        "src": "images/optimized/light/fps/7-960.webp",
-        "width": 960
-      },
-      {
-        "src": "images/optimized/light/fps/7-1920.webp",
         "width": 1920
       }
     ]
